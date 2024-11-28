@@ -102,10 +102,10 @@ class VerReporte(tk.Tk):
 
         # Boton: Eliminar
         self.Eliminar=ttk.Button(self, text="Eliminar", command=self.prueba, style="EL.TButton")
-        self.Eliminar.pack(side=tk.LEFT, fill=tk.BOTH)
+        self.Eliminar.pack(side=tk.LEFT, fill=tk.X)
         # Boton: Volver
         self.Volver=ttk.Button(self, text="Volver", command=self.prueba, style="VO.TButton")
-        self.Volver.pack(side=tk.LEFT, fill=tk.BOTH)
+        self.Volver.pack(side=tk.LEFT, fill=tk.X)
 
     def prueba(self):
         print("Opcion presionada")
