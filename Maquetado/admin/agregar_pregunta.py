@@ -1,12 +1,24 @@
+"""
+Agregar Preguntas
+Autor: Carlos Nevárez - CubicNev
+Fecha de creación: Fri 29-Nov-2024
+
+Ventana para agregar preguntas
+"""
+
 import tkinter as tk
 from tkinter import font, ttk, messagebox
 
-class AgregarPregunta(tk.Tk):
+class AgregarPregunta(tk.Toplevel):
+
+    # Atributo de la clase que indica si la ventana
+    # secundaria está en uso.
+    en_uso = False
 
     def __init__(self):
         # Ventana principal
         super().__init__()
-        self.title("Inside Out")
+        self.title("Agregar pregunta")
 
         # Estilos
         self.style = ttk.Style()
@@ -75,6 +87,13 @@ class AgregarPregunta(tk.Tk):
         # Agrega frame
         self.contenedor_lista_categorias.grid(row=3, column=0, columnspan=2, padx=10, sticky="nsew")
 
+        # Para que la ventana secundaria obtenga el foco automáticamente una vez creada
+        self.focus()
+        # El usuario no pueda utilizar la ventana de administrador mientras esta ventana está visible
+        self.grab_set()
+        # Indicar que la ventana está en uso luego de crearse.
+        self.__class__.en_uso = True
+
     def get_categories(self):
         return ("Inglés", "Soft skills", "Backend", "Frontend")
 
@@ -114,7 +133,9 @@ class AgregarPregunta(tk.Tk):
             )
 
     def cancel(self):
-        print("cancelar")
+        # Restablecer el atributo al cerrarse.
+        self.__class__.en_uso = False
+        return super().destroy()
 
 if __name__ == "__main__":
     root = AgregarPregunta()

@@ -1,6 +1,23 @@
+"""
+Admin
+Autor: Carlos Nevárez - CubicNev
+Fecha de creación: Fri 29-Nov-2024
+
+Ventana para el administrador, le permite realizar las siguientes actividades:
+- Agregar categorías
+- Eliminar categorías
+- Agregar preguntas
+- Eliminar preguntas
+"""
+# Importaciones
+
 import tkinter as tk
 from tkinter import font, ttk, messagebox
 from PIL import Image, ImageTk
+
+# Importa ventanas secundarias
+
+from agregar_pregunta import AgregarPregunta
 
 class Categorias(ttk.Frame):
 
@@ -136,7 +153,7 @@ class Preguntas(ttk.Frame):
         # Agrega frame
         self.contenedor_lista_preguntas.grid(row=1, column=0, columnspan=2, padx=20, sticky="nsew")
 
-        self.btn_agregar_pregunta = ttk.Button(self, text="Agregar pregunta", command=self.agregar_pregunta, style="GR.TButton")
+        self.btn_agregar_pregunta = ttk.Button(self, text="Agregar pregunta", command=self.abrir_agregar_pregunta, style="GR.TButton")
         self.btn_agregar_pregunta.grid(row=2, column=0, pady=10, padx=20)
 
         self.btn_eliminar_pregunta = ttk.Button(self, text="Eliminar pregunta", command=self.eliminar_pregunta, style="RE.TButton")
@@ -157,8 +174,9 @@ class Preguntas(ttk.Frame):
     def get_questions(self):
         return [("¿Pregunta 1?", "Inglés, Softskills"), ("¿Pregunta 2?", "Inglés, Backend"), ("¿Pregunta 3?", "Inglés"), ("¿Pregunta 4?", "Inglés, Frontend")]
 
-    def agregar_pregunta(self):
-        print("Agregar pregunta")
+    def abrir_agregar_pregunta(self):
+        if not AgregarPregunta.en_uso:
+            self.ventana_agregar_pregunta = AgregarPregunta()
 
     def eliminar_pregunta(self):
         try:
@@ -187,11 +205,10 @@ class Preguntas(ttk.Frame):
             )
             print(error)
 
-
 class Admin(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Inside Out")
+        self.title("Administrador")
 
         # Estilos
         self.style = ttk.Style()
