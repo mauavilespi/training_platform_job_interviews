@@ -1,6 +1,25 @@
+"""
+Inicio
+Autor: Carlos Nevárez - CubicNev
+Fecha de creación: Sat 30-Nov-2024
+
+Pantala de inicio que le permitira acceder a los siguientes módulos:
+- Aprende a redactar tu CV
+- Aprende a prepararte para tu entrevista
+- Practica tu entrevistz
+- Ver historial de practicas de entrevista
+"""
+
+# Importaciones
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+
+# Importa ventanas secundarias
+from aprende_a import AprendeA
+from configura_practica import ConfiguraPractica
+from historial import Historial
+
 
 class Inicio(tk.Tk):
     def __init__(self):
@@ -9,52 +28,119 @@ class Inicio(tk.Tk):
         self.title("Inside Out")
         self.config(bg="white")
 
-        # Estilos
+        # -------------- Estilos -------------- #
         self.style = ttk.Style()
         self.style.theme_use('alt')
-        self.style.configure("BW.TLabel", font=('Verdana bold', 18), foreground="black", background="white", padding=10)
-        self.style.configure("TButton", foreground="white", font=('Verdana', 14), background="#1E88E5", borderwidth=1, focusthickness=3, focuscolor='none', padding=10)
+
+        # Titulo blanco y negro
+        self.style.configure(
+            "BW.TLabel",
+            font=('Verdana bold', 18),
+            foreground="black",
+            background="white",
+            padding=10
+        )
+
+        # Boton azul
+        self.style.configure(
+            "BL.TButton",
+            foreground="white",
+            font=('Verdana', 14),
+            background="#1E88E5",
+            borderwidth=1,
+            focusthickness=3,
+            focuscolor='none',
+            padding=10
+        )
+
         self.style.map('TButton', background=[('active', '#1E88E5')])
+
+        # Contenedor con fondo blanco
         self.style.configure("TFrame", background="white")
 
-        # Frame
-        self.fr = ttk.Frame(self, style="TFrame")
-        self.fr.pack()
+        # -------------- Componentes -------------- #
+        # Frame contendor
+        self.contenedor = ttk.Frame(
+            self,
+            style="TFrame"
+        )
+        self.contenedor.pack()
 
         # Label: Bienvenidos
-        self.label = ttk.Label(self.fr, text="¡Bienvenido!", style="BW.TLabel")
-        self.label.grid(row=0,column=0, sticky="w", padx=10, pady=10)
+        self.label = ttk.Label(
+            self.contenedor,
+            text="¡Bienvenido!",
+            style="BW.TLabel"
+        )
+        self.label.grid(row=0, column=0, sticky="w", padx=10, pady=10)
+
 
         # Botónes: Lista de opciones
-        self.aprendeCV = ttk.Button(self.fr, text="Aprende a redactar tu CV", style="TButton", command=self.abrir_aprende_a_CV)
+        self.aprendeCV = ttk.Button(
+            self.contenedor,
+            text="Aprende a redactar tu CV",
+            style="BL.TButton",
+            command=self.abrir_aprende_a_CV
+        )
         self.aprendeCV.grid(row=1,column=0, sticky="w", padx=10, pady=10)
 
-        self.aprendeEntrevista = ttk.Button(self.fr, text="Aprende a preparar tu entrevista", style="TButton", command=self.abrir_aprende_a_Entrevista)
+
+        self.aprendeEntrevista = ttk.Button(
+            self.contenedor,
+            text="Aprende a preparar tu entrevista",
+            style="BL.TButton",
+            command=self.abrir_aprende_a_Entrevista
+        )
         self.aprendeEntrevista.grid(row=2,column=0, sticky="w", padx=10, pady=10)
 
-        self.practica = ttk.Button(self.fr, text="Practica tu entrevista", style="TButton", command=self.abrir_configura_practica)
+
+        self.practica = ttk.Button(
+            self.contenedor,
+            text="Practica tu entrevista",
+            style="BL.TButton",
+            command=self.abrir_configura_practica
+        )
         self.practica.grid(row=3,column=0, sticky="w", padx=10, pady=10)
 
-        self.historial = ttk.Button(self.fr, text="Historial", style="TButton", command=self.abrir_historial)
+
+        self.historial = ttk.Button(
+            self.contenedor,
+            text="Historial",
+            style="BL.TButton",
+            command=self.abrir_historial
+        )
         self.historial.grid(row=4,column=0, sticky="w", padx=10, pady=10)
 
+
         # Label: Imagen de abajo
-        self.imagen = Image.open("happy.png")
+        self.imagen = Image.open("./assets/happy.png")
         self.HappyFace = ImageTk.PhotoImage(self.imagen)
-        self.labelIMG = tk.Label(self.fr, image=self.HappyFace, borderwidth = 0)
+        self.labelIMG = tk.Label(
+            self.contenedor,
+            image=self.HappyFace,
+            borderwidth = 0
+        )
         self.labelIMG.grid(row=3, column=1, rowspan=2, sticky="se", padx=10, pady=10)
 
+
     def abrir_aprende_a_CV(self):
-        print("Aprende a")
+        if not AprendeA.en_uso:
+            self.ventana_aprendeACV = AprendeA()
+
 
     def abrir_aprende_a_Entrevista(self):
-        print("Aprende a")
+        if not AprendeA.en_uso:
+            self.ventana_aprendeEntrevista = AprendeA()
+
 
     def abrir_configura_practica(self):
-        print("Configura practica")
+        if not ConfiguraPractica.en_uso:
+            self.ventana_aprendeEntrevista = ConfiguraPractica()
+
 
     def abrir_historial(self):
         print("Historial")
+
 
 if __name__ == "__main__":
     root = Inicio()

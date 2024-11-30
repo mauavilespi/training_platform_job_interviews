@@ -12,7 +12,12 @@ class VerReporte(tk.Tk):
         self.style = ttk.Style()
         self.style.theme_use('alt')
 
-        self.style.configure("TLabel", font=('Verdana', 18, "bold"), foreground="#1E88E5", background="white", padding=10, relief="flat")
+        self.style.configure(
+            "TLabel",
+            font=('Verdana', 18, "bold"),
+            foreground="#1E88E5",
+            background="white",
+            padding=10, relief="flat")
 
         self.style.configure("VO.TButton", foreground="white", font=('Verdana', 14), background="#1E88E5", borderwidth=0, focusthickness=3, focuscolor='none', padding=10)
         self.style.map('VO.TButton', background=[('active', '#1E88E5')])
