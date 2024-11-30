@@ -31,19 +31,32 @@ class Categorias(ttk.Frame):
             justify=tk.CENTER,
             style="C.TEntry"
         )
-        self.nombre_categoria.grid(row=0, column=0, pady=10, padx=10)
+        self.nombre_categoria.grid(row=0, column=0, pady=30, padx=30)
 
-        self.agregar_categoria = ttk.Button(self, text="Agregar Categoría", command=self.add_category, style="GR.TButton")
-        self.agregar_categoria.grid(row=0, column=1, pady=10, padx=10)
+        self.agregar_categoria = ttk.Button(
+            self,
+            text="Agregar Categoría",
+            command=self.add_category,
+            style="GR.TButton"
+        )
+        self.agregar_categoria.grid(row=0, column=1, pady=30, padx=30)
 
-        self.lbl_categorias = ttk.Label(self, text="Categorias", style="T.TLabel")
-        self.lbl_categorias.grid(row=1, column=0, columnspan=2)
+        self.lbl_categorias = ttk.Label(
+            self,
+            text="Categorias",
+            style="T.TLabel",
+            anchor=tk.CENTER
+        )
+        self.lbl_categorias.grid(row=1, column=0, columnspan=2, sticky="ew")
 
         # Marco contenedor con lista y barra de desplazamiento
         self.contenedor_lista_categorias = ttk.Frame(self)
         self.lista_categorias = tk.Listbox()
         # Barra de navegación vertical
-        self.scrollbar_lista_categorias = ttk.Scrollbar(self.contenedor_lista_categorias, orient=tk.VERTICAL)
+        self.scrollbar_lista_categorias = ttk.Scrollbar(
+            self.contenedor_lista_categorias,
+            orient=tk.VERTICAL
+        )
         # Vincula barra vertical con lista de categorias
         self.lista_categorias = tk.Listbox(
             self.contenedor_lista_categorias,
@@ -60,8 +73,13 @@ class Categorias(ttk.Frame):
         # Agrega frame
         self.contenedor_lista_categorias.grid(row=2, column=0, columnspan=2, padx=10, sticky="nsew")
 
-        self.eliminar_categoria = ttk.Button(self, text="Eliminar categoría", command=self.delete_category, style="RE.TButton")
-        self.eliminar_categoria.grid(row=3, column=0, columnspan=2, pady=10, padx=10, sticky="ew")
+        self.eliminar_categoria = ttk.Button(
+            self,
+            text="Eliminar categoría",
+            command=self.delete_category,
+            style="RE.TButton"
+        )
+        self.eliminar_categoria.grid(row=3, column=0, columnspan=2, pady=30, padx=30, sticky="ew")
 
     def add_category(self):
         if self.nombre_categoria.get():
@@ -126,12 +144,12 @@ class Preguntas(ttk.Frame):
         )
         # Asociando el evento de seleccion de elemento
         self.combo_categorias.bind("<<ComboboxSelected>>", self.mostrar_categoria_seleccionada)
-        self.combo_categorias.grid(row=0, column=0, columnspan=2, pady=10, padx=20, sticky="ew")
+        self.combo_categorias.grid(row=0, column=0, columnspan=2, pady=30, padx=40, sticky="ew")
 
         # Preguntas
         self.preguntas = self.get_questions()
         # Marco contenedor con lista y barra de desplazamiento
-        self.contenedor_lista_preguntas = ttk.Frame(self)
+        self.contenedor_lista_preguntas = ttk.Frame(self, style="G.TFrame")
         self.lista_preguntas = tk.Listbox()
         # Barra de navegación vertical
         self.scrollbar_lista_preguntas = ttk.Scrollbar(self.contenedor_lista_preguntas, orient=tk.VERTICAL)
@@ -139,7 +157,8 @@ class Preguntas(ttk.Frame):
         self.lista_preguntas = tk.Listbox(
             self.contenedor_lista_preguntas,
             yscrollcommand=self.scrollbar_lista_preguntas.set,
-            font=font.Font(family="Verdana", size=12)
+            font=font.Font(family="Verdana", size=12),
+            background="#f0f0f0"
         )
         self.scrollbar_lista_preguntas.config(command=self.lista_preguntas.yview)
         # Ubicar scrollbar a la derecha
@@ -153,11 +172,21 @@ class Preguntas(ttk.Frame):
         # Agrega frame
         self.contenedor_lista_preguntas.grid(row=1, column=0, columnspan=2, padx=20, sticky="nsew")
 
-        self.btn_agregar_pregunta = ttk.Button(self, text="Agregar pregunta", command=self.abrir_agregar_pregunta, style="GR.TButton")
-        self.btn_agregar_pregunta.grid(row=2, column=0, pady=10, padx=20)
+        self.btn_agregar_pregunta = ttk.Button(
+            self,
+            text="Agregar pregunta",
+            command=self.abrir_agregar_pregunta,
+            style="GR.TButton"
+        )
+        self.btn_agregar_pregunta.grid(row=2, column=0, pady=20, padx=20)
 
-        self.btn_eliminar_pregunta = ttk.Button(self, text="Eliminar pregunta", command=self.eliminar_pregunta, style="RE.TButton")
-        self.btn_eliminar_pregunta.grid(row=2, column=1, pady=10, padx=20)
+        self.btn_eliminar_pregunta = ttk.Button(
+            self,
+            text="Eliminar pregunta",
+            command=self.eliminar_pregunta,
+            style="RE.TButton"
+        )
+        self.btn_eliminar_pregunta.grid(row=2, column=1, pady=20, padx=20)
 
 
     def get_categories(self):
@@ -176,7 +205,12 @@ class Preguntas(ttk.Frame):
 
     def abrir_agregar_pregunta(self):
         if not AgregarPregunta.en_uso:
-            self.ventana_agregar_pregunta = AgregarPregunta()
+            # Crear la ventana secundaria y pasar como argumento
+            # la función en la cual queremos recibir el dato
+            # ingresado.
+            self.ventana_agregar_pregunta = AgregarPregunta(
+                callback=self.pregunta_ingresada
+            )
 
     def eliminar_pregunta(self):
         try:
@@ -205,6 +239,14 @@ class Preguntas(ttk.Frame):
             )
             print(error)
 
+    def pregunta_ingresada(self, tupla_pregunta_categorias):
+        # Esta función es invocada cuando el usuario presiona el
+        # botón "Agregar" de la ventana Agregar Pregunta.
+        # La pregunta ingresada y sus categorías estas dentro
+        # del argumento "tupla_pregunta_categorias"
+        self.lista_preguntas.insert(tk.END, tupla_pregunta_categorias[0])
+        self.lista_preguntas.insert(tk.END, tupla_pregunta_categorias[1])
+
 class Admin(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -219,24 +261,28 @@ class Admin(tk.Tk):
         self.style.configure("GR.TButton", foreground="white", font=('Verdana', 14, 'bold'), background="#66BB6A", borderwidth=0, focusthickness=3, focuscolor='none', padding=10)
         self.style.map('GR.TButton', background=[('active', '#66BB6A')])
 
-        self.style.configure("T.TLabel", font=('Verdana', 18, 'bold'), foreground="#1E88E5", background="white", padding=10)
+        self.style.configure("T.TLabel", font=('Verdana', 18, 'bold'), foreground="#1E88E5", background="#f0f0f0", padding=10)
 
         self.style.configure("RE.TButton", foreground="white", font=('Verdana', 14, 'bold'), background="#E57373", borderwidth=0, focusthickness=3, focuscolor='none', padding=10)
         self.style.map('RE.TButton', background=[('active', '#E57373')])
 
+        self.style.configure("TNotebook", background="white")
+
         self.style.configure("TFrame", background="white")
+
+        self.style.configure("G.TFrame", background="#f0f0f0")
 
         # Frame contenedor (Pone fondo en blanco)
         self.contenedor = ttk.Frame(self, style="TFrame")
         self.contenedor.pack()
 
-        self.Opciones = ttk.Notebook(self.contenedor)
+        self.Opciones = ttk.Notebook(self.contenedor, style="TNotebook")
 
         self.Frame_Categorias = Categorias(self.Opciones)
         self.Opciones.add(self.Frame_Categorias, text="Categorías", padding=10)
 
         self.Frame_Preguntas = Preguntas(self.Opciones)
-        self.Opciones.add(self.Frame_Preguntas, text="Preguntas", padding=10)
+        self.Opciones.add(self.Frame_Preguntas, text="Preguntas", padding=50)
 
         self.Opciones.pack()
 

@@ -15,23 +15,59 @@ class AgregarPregunta(tk.Toplevel):
     # secundaria está en uso.
     en_uso = False
 
-    def __init__(self):
-        # Ventana principal
-        super().__init__()
+    def __init__(self, *args, callback=None, **kwargs):
+        # Ventana
+        super().__init__(*args, **kwargs)
+        # callback es una función que esta ventana llamará
+        # una vez presionado el botón para comunicarle la pregunta y sus categorías
+        # ingresado a la ventana padre.
+        self.callback = callback
+        # Configurando ventana
         self.title("Agregar pregunta")
-
+        self.config(background="white")
+        # Deshabilitar el botón para maximizar la ventana.
+        self.resizable(0, 0)
         # Estilos
         self.style = ttk.Style()
         self.style.theme_use('alt')
 
-        self.style.configure("C.TEntry", foreground="black", padding=15)
+        self.style.configure(
+            "C.TEntry",
+            foreground="black",
+            padding=15
+        )
 
-        self.style.configure("GR.TButton", foreground="white", font=('Verdana', 14, 'bold'), background="#66BB6A", borderwidth=0, focusthickness=3, focuscolor='none', padding=10)
+        self.style.configure(
+            "GR.TButton",
+            foreground="white",
+            font=('Verdana', 14, 'bold'),
+            background="#66BB6A",
+            borderwidth=0,
+            focusthickness=3,
+            focuscolor='none',
+            padding=10
+        )
         self.style.map('GR.TButton', background=[('active', '#66BB6A')])
 
-        self.style.configure("T.TLabel", font=('Verdana', 12), foreground="black", background="white", padding=10)
+        self.style.configure(
+            "T.TLabel",
+            font=('Verdana', 12),
+            foreground="black",
+            background="white",
+            padding=10
+        )
+        self.style.configure("G.TLabel", font=('Verdana', 12), foreground="black", background="#f0f0f0")
 
-        self.style.configure("RE.TButton", foreground="white", font=('Verdana', 14, 'bold'), background="#E57373", borderwidth=0, focusthickness=3, focuscolor='none', padding=10)
+        self.style.configure(
+            "RE.TButton",
+            foreground="white",
+            font=('Verdana', 14, 'bold'),
+            background="#E57373",
+            borderwidth=0,
+            focusthickness=3,
+            focuscolor='none',
+            padding=10
+        )
         self.style.map('RE.TButton', background=[('active', '#E57373')])
 
         self.style.configure("TFrame", background="white")
@@ -45,7 +81,7 @@ class AgregarPregunta(tk.Toplevel):
 
         # Frame contenedor (Pone fondo en blanco)
         self.contenedor = ttk.Frame(self, style="TFrame")
-        self.contenedor.pack()
+        self.contenedor.pack(padx=50, pady=50)
 
         self.ent_pregunta = ttk.Entry(
             self.contenedor,
@@ -56,14 +92,29 @@ class AgregarPregunta(tk.Toplevel):
         )
         self.ent_pregunta.grid(row=0, column=0, rowspan=2)
 
-        self.btn_agregar_pregunta = ttk.Button(self.contenedor, text="Agregar", command=self.add_question, style="GR.TButton")
+        self.btn_agregar_pregunta = ttk.Button(
+            self.contenedor,
+            text="Agregar",
+            command=self.add_question,
+            style="GR.TButton"
+        )
         self.btn_agregar_pregunta.grid(row=0, column=1, padx=10, pady=10)
 
-        self.btn_agregar_pregunta = ttk.Button(self.contenedor, text="Cancelar", command=self.cancel, style="RE.TButton")
+        self.btn_agregar_pregunta = ttk.Button(
+            self.contenedor,
+            text="Cancelar",
+            command=self.cancel,
+            style="RE.TButton"
+        )
         self.btn_agregar_pregunta.grid(row=1, column=1, padx=10, pady=5)
 
-        self.lbl_categorias = ttk.Label(self.contenedor, text="Selecciona la (o las) categoria(s) de la pregunta", style="T.TLabel")
-        self.lbl_categorias.grid(row=2, column=0, columnspan=2)
+        self.lbl_categorias = ttk.Label(
+            self.contenedor,
+            text="Selecciona la (o las) categoria(s) de la pregunta",
+            style="G.TLabel",
+            anchor=tk.CENTER
+        )
+        self.lbl_categorias.grid(row=2, column=0, columnspan=2, pady=10, sticky="we")
 
         # Marco contenedor con lista y barra de desplazamiento
         self.contenedor_lista_categorias = ttk.Frame(self.contenedor)
@@ -114,6 +165,13 @@ class AgregarPregunta(tk.Toplevel):
                     if confirmar:
                         print(f"Agregar: {pregunta}")
                         print(f"Categorias: {categorias}")
+                        # Obtener la pregunta y categorias y llamar a la función
+                        # especificada al crear esta ventana.
+                        self.callback((pregunta, categorias))
+                        # Restablecer el atributo al cerrarse.
+                        self.__class__.en_uso = False
+                        # Cerrar la ventana.
+                        self.destroy()
                 else:
                     messagebox.showwarning(
                         title="Atención",
