@@ -16,10 +16,11 @@ class AprendeA(tk.Toplevel):
     en_uso = False
 
     def __init__(self):
+        # Ventana
         super().__init__()
         self.title("Aprende a...")
 
-        # Estilos
+        #  -------------- Estilos -------------- #
         self.style = ttk.Style()
         self.style.theme_use('alt')
 
@@ -37,6 +38,7 @@ class AprendeA(tk.Toplevel):
         # Contenedor de fondo blanco
         self.style.configure("TFrame", background="white")
 
+        # -------------- Componentes -------------- #
         # Frame contenedor (Pone fondo en blanco)
         self.fr = ttk.Frame(self, style="TFrame")
         self.fr.pack()

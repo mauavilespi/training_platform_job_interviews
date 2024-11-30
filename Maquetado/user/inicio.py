@@ -125,21 +125,22 @@ class Inicio(tk.Tk):
 
     def abrir_aprende_a_CV(self):
         if not AprendeA.en_uso:
-            self.ventana_aprendeACV = AprendeA()
+            self.ventana_aprende_CV = AprendeA()
 
 
     def abrir_aprende_a_Entrevista(self):
         if not AprendeA.en_uso:
-            self.ventana_aprendeEntrevista = AprendeA()
+            self.ventana_aprende_entrevista = AprendeA()
 
 
     def abrir_configura_practica(self):
         if not ConfiguraPractica.en_uso:
-            self.ventana_aprendeEntrevista = ConfiguraPractica()
+            self.ventana_configura_practica = ConfiguraPractica()
 
 
     def abrir_historial(self):
-        print("Historial")
+        if not Historial.en_uso:
+            self.ventana_historial = Historial()
 
 
 if __name__ == "__main__":

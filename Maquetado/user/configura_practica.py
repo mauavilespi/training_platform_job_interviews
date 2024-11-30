@@ -8,7 +8,7 @@ class ConfiguraPractica(tk.Toplevel):
     en_uso = False
 
     def __init__(self):
-        # Ventana principal
+        # Ventana
         super().__init__()
         self.title("Configura tu entrevista")
 
