@@ -51,7 +51,9 @@ class Categorias(ttk.Frame):
 
         # Marco contenedor con lista y barra de desplazamiento
         self.contenedor_lista_categorias = ttk.Frame(self)
+        # Inicia listbox
         self.lista_categorias = tk.Listbox()
+
         # Barra de navegación vertical
         self.scrollbar_lista_categorias = ttk.Scrollbar(
             self.contenedor_lista_categorias,
@@ -64,12 +66,15 @@ class Categorias(ttk.Frame):
             font=font.Font(family="Verdana", size=12)
         )
         self.scrollbar_lista_categorias.config(command=self.lista_categorias.yview)
+
         # Ubicar scrollbar a la derecha
         self.scrollbar_lista_categorias.pack(side=tk.RIGHT, fill=tk.Y)
         # Pone lista de categorias
         self.lista_categorias.pack(fill=tk.BOTH, expand=True)
+
         # Agrega categorías alamacenadas en la lista
         self.lista_categorias.insert(0, *self.categorias)
+
         # Agrega frame
         self.contenedor_lista_categorias.grid(row=2, column=0, columnspan=2, padx=10, sticky="nsew")
 
@@ -90,12 +95,14 @@ class Categorias(ttk.Frame):
             # Avisa que se agrego la categoría
             messagebox.showinfo(
                 title="Mensaje",
-                message="Se agrego categoría"
+                message="Se agrego categoría",
+                parent=self
             )
         else:
             messagebox.showwarning(
                 title="Atención",
-                message="Debe ingresar el nombre de una categoría para agregarla"
+                message="Debe ingresar el nombre de una categoría para agregarla",
+                parent=self
             )
 
     def delete_category(self):
@@ -106,7 +113,8 @@ class Categorias(ttk.Frame):
 
             confirmar = messagebox.askyesno(
                 title="Borrar categoria",
-                message= f"¿Estas seguro de borrar {categoria}?"
+                message= f"¿Estas seguro de borrar {categoria}?",
+                parent=self
             )
 
             if confirmar:
@@ -115,13 +123,15 @@ class Categorias(ttk.Frame):
                 # Avisa que se elimino la categoría
                 messagebox.showinfo(
                     title="Mensaje",
-                    message=f"Se elimino la categoría {categoria}"
+                    message=f"Se elimino la categoría {categoria}",
+                    parent=self
                 )
 
         except Exception as error:
             messagebox.showerror(
                 title="Error",
-                message="No haz seleccionado una categoría para eliminar"
+                message="No haz seleccionado una categoría para eliminar",
+                parent=self
             )
             print(error)
 
@@ -197,7 +207,8 @@ class Preguntas(ttk.Frame):
         categoria = self.combo_categorias.get()
         messagebox.showinfo(
             message=f"Mostrar {categoria}",
-            title="Mostrar categoria"
+            title="Mostrar categoria",
+            parent=self
         )
 
     def get_questions(self):
@@ -220,7 +231,8 @@ class Preguntas(ttk.Frame):
 
             confirmar = messagebox.askyesno(
                 title="Borrar pregunta",
-                message= f"¿Estas seguro de borrar {pregunta}?"
+                message= f"¿Estas seguro de borrar {pregunta}?",
+                parent=self
             )
 
             if confirmar:
@@ -229,13 +241,15 @@ class Preguntas(ttk.Frame):
                 # Avisa que se elimino la categoría
                 messagebox.showinfo(
                     title="Mensaje",
-                    message=f"Se elimino la pregunta {pregunta}"
+                    message=f"Se elimino la pregunta {pregunta}",
+                    parent=self
                 )
 
         except Exception as error:
             messagebox.showerror(
                 title="Error",
-                message="No haz seleccionado una pregunta para eliminar"
+                message="No haz seleccionado una pregunta para eliminar",
+                parent=self
             )
             print(error)
 

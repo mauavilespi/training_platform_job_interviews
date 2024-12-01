@@ -159,7 +159,8 @@ class AgregarPregunta(tk.Toplevel):
                 if indices:
                     confirmar = messagebox.askyesno(
                         title="Agregar pregunta",
-                        message= f"Se agregara {pregunta} con categoria(s): {categorias}"
+                        message= f"Se agregara {pregunta} con categoria(s): {categorias}",
+                        parent=self
                     )
 
                     if confirmar:
@@ -175,19 +176,22 @@ class AgregarPregunta(tk.Toplevel):
                 else:
                     messagebox.showwarning(
                         title="Atención",
-                        message="Debe seleccionar al menos una categoría para la pregunta."
+                        message="Debe seleccionar al menos una categoría para la pregunta.",
+                        parent=self
                     )
 
             except Exception as error:
                 messagebox.showerror(
                     title="Atención",
-                    message="Debes seleccionar al menos una categoría para la pregunta."
+                    message="Debes seleccionar al menos una categoría para la pregunta.",
+                    parent=self
                 )
                 print(error)
         else:
             messagebox.showwarning(
                 title="Atención",
-                message="Debe ingresar el nombre de una categoría para agregarla"
+                message="Debe ingresar el nombre de una categoría para agregarla",
+                parent=self
             )
 
     def cancel(self):

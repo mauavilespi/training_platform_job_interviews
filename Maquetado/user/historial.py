@@ -30,10 +30,10 @@ class Historial(tk.Toplevel):
 
         # Titulo de seccion: "Reportes"
         self.style.configure(
-            "TLabel",
-            font=('Verdana', 12),
-            foreground="#1E88E5",
-            background="white",
+            "BG.TLabel",
+            font=('Verdana bold', 18),
+            foreground="black",
+            background="#f0f0f0",
             padding=10
         )
 
@@ -64,14 +64,13 @@ class Historial(tk.Toplevel):
         # Frame contenedor con fondo blanco
         self.style.configure("TFrame", background="white")
 
-        # Frame contenedor (Pone fondo en blanco)
-        self.contenedor = ttk.Frame(self, style="TFrame")
-        self.contenedor.pack()
-
         # Imagen para boton "Volver al inicio"
         self.img_volver = tk.PhotoImage(file="./assets/homeicon.png")
 
         # -------------- Componentes -------------- #
+        # Frame contenedor (Pone fondo en blanco)
+        self.contenedor = ttk.Frame(self, style="TFrame")
+        self.contenedor.pack(padx=50, pady=25)
 
         # Boton: Volver al inicio
         self.volver = ttk.Button(
@@ -88,34 +87,38 @@ class Historial(tk.Toplevel):
         self.titulo = ttk.Label(
             self.contenedor,
             text="Reportes guardados",
-            style="BW.TLabel"
+            style="BG.TLabel",
+            anchor=tk.CENTER
         )
-        self.titulo.grid(row=1, column=0, sticky="w", padx=80, pady=10)
+        self.titulo.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
 
         # Frame: Marco para contener la lista de reportes
         self.contenedorLista = ttk.Frame(self.contenedor)
         # ListBox: Lista de reportes
-        self.reportes = tk.Listbox(self.contenedorLista)
+        self.reportes = tk.Listbox()
+
         # Crear una barra de deslizamiento con orientación vertical.
         self.scrollbar = ttk.Scrollbar(
             self.contenedorLista,
             orient=tk.VERTICAL
         )
-        # Vincularla con la lista.
+        # Vincular scrollbar y configurar la lista.
         self.reportes = tk.Listbox(
             self.contenedorLista,
             yscrollcommand=self.scrollbar.set,
             font=font.Font(family="Verdana", size=12)
         )
         self.scrollbar.config(command=self.reportes.yview)
-        # Ubicarla a la derecha.
+        # Ubicar scrollbar a la derecha.
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.reportes.pack(fill=tk.X)
-        self.contenedorLista.grid(row=2,column=0, sticky="nsew", padx=40, pady=10)
+        # Ubicar lista a la izquierda
+        self.reportes.pack(expand=True, fill=tk.BOTH)
 
         # Insertar elementos.
         for reporte in self.get_reportes():
             self.reportes.insert(tk.END, reporte)
+
+        self.contenedorLista.grid(row=2, column=0, sticky="nsew", pady=10, ipadx=80)
 
         # Boton: Abrir
         self.Abrir=ttk.Button(
@@ -145,18 +148,20 @@ class Historial(tk.Toplevel):
         try:
             # Tupla de indices (posiciones) del elemento (reporte) seleccionado, en este caso solo obtiene uno
             indice = self.reportes.curselection()
-            categoria = self.reportes.get(indice)
+            reporte = self.reportes.get(indice)
 
             if not VerReporte.en_uso:
                 # Crear la ventana secundaria y pasar como argumento
                 # la función en la cual queremos recibir el dato
                 # ingresado.
-                self.ventana_ver_reporte = VerReporte()
+                print(reporte+".csv")
+                self.ventana_ver_reporte = VerReporte("reporte.csv")
 
         except Exception as error:
             messagebox.showerror(
                 title="Error",
-                message="No haz seleccionado un reporte"
+                message="No haz seleccionado un reporte",
+                parent=self
             )
             print(error)
 

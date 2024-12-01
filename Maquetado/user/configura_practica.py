@@ -1,3 +1,13 @@
+"""
+Configura Practica de Entrevista
+Autor: Carlos Nevárez - CubicNev
+Fecha de creación: Sun 01-Dec-2024
+
+Es la pantalla previa a abrir la practica de la entrevista, se editan los siguientes parametros:
+- Categoria de la spreguntas de la entrevista
+- Número de preguntas
+"""
+
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk

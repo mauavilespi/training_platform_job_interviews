@@ -1,18 +1,34 @@
+"""
+Ver Reporte
+Autor: Carlos Nevárez - CubicNev
+Fecha de creación: Sun 01-Dec-2024
+
+Se despliega el reporte de la entrevista en formato de tabla
+"""
+
+# Importaciones
+
+import csv
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 
 class VerReporte(tk.Toplevel):
 
     # Atributo de la clase que indica si la ventana secundaria está en uso.
     en_uso = False
+    nombre_reporte = "13 nov - 11:54 a.m. (10 mins)"
 
-    def __init__(self):
+    def __init__(self, nombre_reporte):
         # Ventana
         super().__init__()
-        self.title("Inside Out")
+        self.nombre_reporte = nombre_reporte
+        print(self.nombre_reporte)
 
-        # Estilos
+        self.title("Inside Out")
+        self.config(background="white")
+
+        #  -------------- Estilos -------------- #
         self.style = ttk.Style()
         self.style.theme_use('alt')
 
@@ -20,7 +36,7 @@ class VerReporte(tk.Toplevel):
             "TLabel",
             font=('Verdana', 18, "bold"),
             foreground="#1E88E5",
-            background="white",
+            background="#f0f0f0",
             padding=10, relief="flat"
         )
 
@@ -70,10 +86,6 @@ class VerReporte(tk.Toplevel):
             background=[('active', 'white')]
         )
 
-        # Frame contenedor (Pone fondo en blanco)
-        self.contenedor = ttk.Frame(self, style="TFrame")
-        self.contenedor.pack(side=tk.TOP, fill=tk.X)
-
         # Obtener imagenes para las emociones
         self.emo_disgusto = tk.PhotoImage(file="./assets/emociones/disgusto-s.png")
         self.emo_enojo = tk.PhotoImage(file="./assets/emociones/enojo-s.png")
@@ -83,12 +95,38 @@ class VerReporte(tk.Toplevel):
         self.emo_sorpresa = tk.PhotoImage(file="./assets/emociones/sorpresa-s.png")
         self.emo_triste = tk.PhotoImage(file="./assets/emociones/triste-s.png")
 
-        # Titulo del reporte
-        self.titulo = ttk.Label(self.contenedor, text="1 de nov - 7:00 am (22 mins)")
-        self.titulo.pack(side=tk.TOP, fill=tk.X)
+        # -------------- Componentes -------------- #
+        # Frame contenedor (Pone fondo en blanco)
+        self.contenedor = ttk.Frame(self, style="TFrame")
+        self.contenedor.pack(padx=25, pady=25)
 
-        # Contendor de reporte (Treeview con varias columnas)
-        self.tablareporte = ttk.Treeview(self.contenedor, columns=("Disgusto", "Enojo", "Feliz", "Miedo", "Neutro", "Sorpresa", "Triste"))
+        # Titulo del reporte
+        self.titulo = ttk.Label(
+            self.contenedor,
+            text="1 de nov - 7:00 am (22 mins)",
+            anchor=tk.CENTER
+        )
+        self.titulo.grid(row=0, column=0, columnspan=2, sticky="we",)
+
+        # Contenedor para la tabla y la scrollbar
+        self.contenedor_tabla_reporte = ttk.Frame(self.contenedor)
+        # Treeview: Tabla con Reporte
+        self.tablareporte = ttk.Treeview()
+        # Scrollbar
+        self.scrollY = ttk.Scrollbar(
+            self.contenedor_tabla_reporte,
+            orient=tk.VERTICAL
+        )
+        # Tabla de reporte (Treeview con varias columnas)
+        self.tablareporte = ttk.Treeview(
+            self.contenedor_tabla_reporte,
+            columns=("Disgusto", "Enojo", "Feliz", "Miedo", "Neutro", "Sorpresa", "Triste"),
+            yscrollcommand=self.scrollY.set
+        )
+        # Vincula barra vertical
+        self.scrollY.config(
+            command=self.tablareporte.yview
+        )
         # Configurando columnas
         self.tablareporte.column("#0", width=400, anchor=tk.W)
         self.tablareporte.column("Disgusto", width=170, anchor=tk.CENTER, stretch=tk.YES)
@@ -107,50 +145,56 @@ class VerReporte(tk.Toplevel):
         self.tablareporte.heading("Neutro", text="Neutro", image=self.emo_neutral)
         self.tablareporte.heading("Sorpresa", text="Sorpresa", image=self.emo_sorpresa)
         self.tablareporte.heading("Triste", text="Triste", image=self.emo_triste)
-        # Inserta elemento
-        self.elemento = self.tablareporte.insert(
-            "",
-            tk.END,
-            text="¿Pregunta 1? 34 seg",
-            values=("0%", "0%", "0%", "80%", "5%", "15%", "0%")
-        )
-        self.elemento = self.tablareporte.insert(
-            "",
-            tk.END,
-            text="¿Pregunta 2? 50 seg",
-            values=("0%", "0%", "0%", "80%", "5%", "15%", "0%")
-        )
-        self.elemento = self.tablareporte.insert(
-            "",
-            tk.END,
-            text="¿Pregunta 3? 40 seg",
-            values=("0%", "0%", "0%", "80%", "5%", "15%", "0%")
-        )
-        self.elemento = self.tablareporte.insert(
-            "",
-            tk.END,
-            text="¿Pregunta 4? 10 seg",
-            values=("0%", "0%", "0%", "80%", "5%", "15%", "0%")
-        )
+        # Inserta elementos
+        for pregunta in self.get_reporte():
+            print(pregunta)
+            self.tablareporte.insert(
+                "",
+                tk.END,
+                text=pregunta['Preguntas'],
+                values=(
+                    pregunta['Disgusto'],
+                    pregunta['Enojo'],
+                    pregunta['Feliz'],
+                    pregunta['Miedo'],
+                    pregunta['Neutro'],
+                    pregunta['Sorpresa'],
+                    pregunta['Triste']
+                )
+            )
         # Obteniendo valor de las columnas de un elemento
-        print(self.tablareporte.set(self.elemento))
+        # print(self.tablareporte.set(self.elemento))
         # Obteniendo el valor de una columna específica
-        print(self.tablareporte.set(self.elemento, "Disgusto"))
+        # print(self.tablareporte.set(self.elemento, "Disgusto"))
         # Estableciendo un nuevo valor (Cambia 5 % pot 10%)
-        print(self.tablareporte.set(self.elemento, "Neutro", "10%"))
+        # print(self.tablareporte.set(self.elemento, "Neutro", "10%"))
 
-        # Scroll
-        self.scrollY = ttk.Scrollbar(self.contenedor, command=self.tablareporte.yview)
+        # Agrega y ubica scrollbar
         self.scrollY.pack(side=tk.RIGHT, fill=tk.Y)
 
+        # Agrega tabla reporte
         self.tablareporte.pack(expand=True, side=tk.LEFT, fill=tk.BOTH)
 
+        # Agrega frame
+        self.contenedor_tabla_reporte.grid(row=1, column=0, columnspan=2, padx=10, sticky="nsew")
+
         # Boton: Eliminar
-        self.Eliminar=ttk.Button(self, text="Eliminar", command=self.eliminar_reporte, style="EL.TButton")
-        self.Eliminar.pack(side=tk.LEFT, fill=tk.X)
+        self.Eliminar=ttk.Button(
+            self.contenedor,
+            text="Eliminar",
+            command=self.eliminar_reporte,
+            style="EL.TButton"
+        )
+        self.Eliminar.grid(row=2, column=0, pady=10, sticky="we")
+
         # Boton: Volver
-        self.Volver=ttk.Button(self, text="Volver", command=self.goback, style="VO.TButton")
-        self.Volver.pack(side=tk.LEFT, fill=tk.X)
+        self.Volver=ttk.Button(
+            self.contenedor,
+            text="Volver",
+            command=self.goback,
+            style="VO.TButton"
+        )
+        self.Volver.grid(row=2, column=1, pady=10, sticky="we")
 
         # Para que la ventana secundaria obtenga el foco automáticamente una vez creada
         self.focus()
@@ -164,11 +208,36 @@ class VerReporte(tk.Toplevel):
         self.__class__.en_uso = False
         return super().destroy()
 
+    def get_reporte(self):
+        # Se abre el reporte en modo lectura
+        with open(f"./{self.nombre_reporte}", 'r', encoding='UTF-8') as csvfile:
+            # Lee archivo tomando como delimitador las comas ','
+            reader = csv.reader(csvfile, delimiter=',')
+            # Se extraen encabezados
+            header = next(reader)
+            # Lista para guardar datos
+            data = []
+            # Se lee fila por fila
+            for row in reader:
+                # Union de encabezado con fila en una lista de tuplas: (Columna, Valor)
+                iterable = zip(header, row)
+                # Se pasa a diccionario
+                report_dict = {key: value for key, value in iterable}
+                # Se agrega el diccionario a la lista
+                data.append(report_dict)
+
+        return data
+
     def eliminar_reporte(self):
-        print("Eliminar Reporte")
-        # Restablecer el atributo al cerrarse.
-        self.__class__.en_uso = False
-        return super().destroy()
+        confirmar = messagebox.askyesno(
+            title="Borrar reporte",
+            message= f"¿Estas seguro de borrar {self.__class__.nombre_reporte}?",
+            parent=self
+        )
+        if confirmar:
+            # Restablecer el atributo al cerrarse.
+            self.__class__.en_uso = False
+            return super().destroy()
 
 
 if __name__ == "__main__":
