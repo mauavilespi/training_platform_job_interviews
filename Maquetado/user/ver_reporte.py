@@ -2,7 +2,11 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 
-class VerReporte(tk.Tk):
+class VerReporte(tk.Toplevel):
+
+    # Atributo de la clase que indica si la ventana secundaria está en uso.
+    en_uso = False
+
     def __init__(self):
         # Ventana
         super().__init__()
@@ -17,31 +21,67 @@ class VerReporte(tk.Tk):
             font=('Verdana', 18, "bold"),
             foreground="#1E88E5",
             background="white",
-            padding=10, relief="flat")
+            padding=10, relief="flat"
+        )
 
-        self.style.configure("VO.TButton", foreground="white", font=('Verdana', 14), background="#1E88E5", borderwidth=0, focusthickness=3, focuscolor='none', padding=10)
+        self.style.configure(
+            "VO.TButton",
+            foreground="white",
+            font=('Verdana', 14),
+            background="#1E88E5",
+            borderwidth=0,
+            focusthickness=3,
+            focuscolor='none',
+            padding=10
+        )
         self.style.map('VO.TButton', background=[('active', '#1E88E5')])
-        self.style.configure("EL.TButton", foreground="white", font=('Verdana', 14), background="#E57373", borderwidth=0, focusthickness=3, focuscolor='none', padding=10)
+
+        self.style.configure(
+            "EL.TButton",
+            foreground="white",
+            font=('Verdana', 14),
+            background="#E57373",
+            borderwidth=0,
+            focusthickness=3,
+            focuscolor='none',
+            padding=10
+        )
         self.style.map('EL.TButton', background=[('active', '#E57373')])
 
         self.style.configure("TFrame", background="white")
 
-        self.style.configure("Treeview", foreground="black", background="white", font=('Verdana', 12), padding=10)
-        self.style.configure("Treeview.Heading", foreground="black", background="white", font=('Verdana', 15), padding=12)
-        self.style.map("Treeview.Heading", background=[('active', 'white')])
+        self.style.configure(
+            "Treeview",
+            foreground="black",
+            background="white",
+            font=('Verdana', 12),
+            padding=10
+        )
+
+        self.style.configure(
+            "Treeview.Heading",
+            foreground="black",
+            background="white",
+            font=('Verdana', 15),
+            padding=12
+        )
+        self.style.map(
+            "Treeview.Heading",
+            background=[('active', 'white')]
+        )
 
         # Frame contenedor (Pone fondo en blanco)
         self.contenedor = ttk.Frame(self, style="TFrame")
         self.contenedor.pack(side=tk.TOP, fill=tk.X)
 
         # Obtener imagenes para las emociones
-        self.emo_disgusto = tk.PhotoImage(file="./emociones/disgusto-s.png")
-        self.emo_enojo = tk.PhotoImage(file="./emociones/enojo-s.png")
-        self.emo_feliz = tk.PhotoImage(file="./emociones/feliz-s.png")
-        self.emo_miedo = tk.PhotoImage(file="./emociones/miedo-s.png")
-        self.emo_neutral = tk.PhotoImage(file="./emociones/neutral-s.png")
-        self.emo_sorpresa = tk.PhotoImage(file="./emociones/sorpresa-s.png")
-        self.emo_triste = tk.PhotoImage(file="./emociones/triste-s.png")
+        self.emo_disgusto = tk.PhotoImage(file="./assets/emociones/disgusto-s.png")
+        self.emo_enojo = tk.PhotoImage(file="./assets/emociones/enojo-s.png")
+        self.emo_feliz = tk.PhotoImage(file="./assets/emociones/feliz-s.png")
+        self.emo_miedo = tk.PhotoImage(file="./assets/emociones/miedo-s.png")
+        self.emo_neutral = tk.PhotoImage(file="./assets/emociones/neutral-s.png")
+        self.emo_sorpresa = tk.PhotoImage(file="./assets/emociones/sorpresa-s.png")
+        self.emo_triste = tk.PhotoImage(file="./assets/emociones/triste-s.png")
 
         # Titulo del reporte
         self.titulo = ttk.Label(self.contenedor, text="1 de nov - 7:00 am (22 mins)")
@@ -106,14 +146,29 @@ class VerReporte(tk.Tk):
         self.tablareporte.pack(expand=True, side=tk.LEFT, fill=tk.BOTH)
 
         # Boton: Eliminar
-        self.Eliminar=ttk.Button(self, text="Eliminar", command=self.prueba, style="EL.TButton")
+        self.Eliminar=ttk.Button(self, text="Eliminar", command=self.eliminar_reporte, style="EL.TButton")
         self.Eliminar.pack(side=tk.LEFT, fill=tk.X)
         # Boton: Volver
-        self.Volver=ttk.Button(self, text="Volver", command=self.prueba, style="VO.TButton")
+        self.Volver=ttk.Button(self, text="Volver", command=self.goback, style="VO.TButton")
         self.Volver.pack(side=tk.LEFT, fill=tk.X)
 
-    def prueba(self):
-        print("Opcion presionada")
+        # Para que la ventana secundaria obtenga el foco automáticamente una vez creada
+        self.focus()
+        # El usuario no pueda utilizar la ventana de administrador mientras esta ventana está visible
+        self.grab_set()
+        # Indicar que la ventana está en uso luego de crearse.
+        self.__class__.en_uso = True
+
+    def goback(self):
+        # Restablecer el atributo al cerrarse.
+        self.__class__.en_uso = False
+        return super().destroy()
+
+    def eliminar_reporte(self):
+        print("Eliminar Reporte")
+        # Restablecer el atributo al cerrarse.
+        self.__class__.en_uso = False
+        return super().destroy()
 
 
 if __name__ == "__main__":

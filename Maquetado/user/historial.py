@@ -8,8 +8,11 @@ puede seleccionar un reporte, esto lo redireccionara a la ventana: Ver Reporte
 """
 # Importaciones
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox, font
 from PIL import Image, ImageTk
+
+# Importa ventana Ver Reporte
+from ver_reporte import VerReporte
 
 class Historial(tk.Toplevel):
 
@@ -94,9 +97,16 @@ class Historial(tk.Toplevel):
         # ListBox: Lista de reportes
         self.reportes = tk.Listbox(self.contenedorLista)
         # Crear una barra de deslizamiento con orientación vertical.
-        self.scrollbar = ttk.Scrollbar(self.contenedorLista, orient=tk.VERTICAL)
+        self.scrollbar = ttk.Scrollbar(
+            self.contenedorLista,
+            orient=tk.VERTICAL
+        )
         # Vincularla con la lista.
-        self.reportes = tk.Listbox(self.contenedorLista, yscrollcommand=self.scrollbar.set)
+        self.reportes = tk.Listbox(
+            self.contenedorLista,
+            yscrollcommand=self.scrollbar.set,
+            font=font.Font(family="Verdana", size=12)
+        )
         self.scrollbar.config(command=self.reportes.yview)
         # Ubicarla a la derecha.
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -111,7 +121,7 @@ class Historial(tk.Toplevel):
         self.Abrir=ttk.Button(
             self.contenedor,
             text="Abrir",
-            command=self.prueba,
+            command=self.abrir_ventana_reporte,
             style="A.TButton"
         )
         self.Abrir.grid(row=4, column=0, sticky="nsew", pady=10, padx=10)
@@ -131,8 +141,24 @@ class Historial(tk.Toplevel):
         self.__class__.en_uso = False
         return super().destroy()
 
-    def prueba(self):
-        print("Opcion presionada")
+    def abrir_ventana_reporte(self):
+        try:
+            # Tupla de indices (posiciones) del elemento (reporte) seleccionado, en este caso solo obtiene uno
+            indice = self.reportes.curselection()
+            categoria = self.reportes.get(indice)
+
+            if not VerReporte.en_uso:
+                # Crear la ventana secundaria y pasar como argumento
+                # la función en la cual queremos recibir el dato
+                # ingresado.
+                self.ventana_ver_reporte = VerReporte()
+
+        except Exception as error:
+            messagebox.showerror(
+                title="Error",
+                message="No haz seleccionado un reporte"
+            )
+            print(error)
 
 if __name__ == "__main__":
     root = Historial()
