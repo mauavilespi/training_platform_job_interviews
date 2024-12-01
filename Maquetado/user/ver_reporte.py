@@ -17,13 +17,19 @@ class VerReporte(tk.Toplevel):
 
     # Atributo de la clase que indica si la ventana secundaria está en uso.
     en_uso = False
-    nombre_reporte = "13 nov - 11:54 a.m. (10 mins)"
 
-    def __init__(self, nombre_reporte):
+    def __init__(self,  *args, nombre_reporte, indice_reporte, callback=None, **kwargs):
         # Ventana
-        super().__init__()
+        super().__init__(*args, **kwargs)
+        # callback es una función que esta ventana llamará
+        # una vez presionado el botón para comunicarle el reporte a eliminar
+        # (si es que se elimina)
+        self.callback = callback
+        # Inicializando el nombre del reporte
         self.nombre_reporte = nombre_reporte
-        print(self.nombre_reporte)
+        # print(self.nombre_reporte)
+        # Inicializando el indice el reporte en la lista del historial de rpeortes
+        self.indice_reporte = indice_reporte
 
         self.title("Inside Out")
         self.config(background="white")
@@ -100,13 +106,14 @@ class VerReporte(tk.Toplevel):
         self.contenedor = ttk.Frame(self, style="TFrame")
         self.contenedor.pack(padx=25, pady=25)
 
+        titulo_limpio = self.nombre_reporte[:-4] # Quita la extension ".csv"
         # Titulo del reporte
         self.titulo = ttk.Label(
             self.contenedor,
-            text="1 de nov - 7:00 am (22 mins)",
+            text= titulo_limpio.replace("_",":"), # Cambia '_' por ':'
             anchor=tk.CENTER
         )
-        self.titulo.grid(row=0, column=0, columnspan=2, sticky="we",)
+        self.titulo.grid(row=0, column=0, columnspan=2, sticky="we")
 
         # Contenedor para la tabla y la scrollbar
         self.contenedor_tabla_reporte = ttk.Frame(self.contenedor)
@@ -147,7 +154,7 @@ class VerReporte(tk.Toplevel):
         self.tablareporte.heading("Triste", text="Triste", image=self.emo_triste)
         # Inserta elementos
         for pregunta in self.get_reporte():
-            print(pregunta)
+            # print(pregunta)
             self.tablareporte.insert(
                 "",
                 tk.END,
@@ -210,7 +217,7 @@ class VerReporte(tk.Toplevel):
 
     def get_reporte(self):
         # Se abre el reporte en modo lectura
-        with open(f"./{self.nombre_reporte}", 'r', encoding='UTF-8') as csvfile:
+        with open(f"./reports/{self.nombre_reporte}", 'r', encoding='UTF-8') as csvfile:
             # Lee archivo tomando como delimitador las comas ','
             reader = csv.reader(csvfile, delimiter=',')
             # Se extraen encabezados
@@ -231,10 +238,21 @@ class VerReporte(tk.Toplevel):
     def eliminar_reporte(self):
         confirmar = messagebox.askyesno(
             title="Borrar reporte",
-            message= f"¿Estas seguro de borrar {self.__class__.nombre_reporte}?",
+            message= f"¿Estas seguro de borrar {self.nombre_reporte}?",
             parent=self
         )
         if confirmar:
+            # print(f"Borrar: {self.nombre_reporte}")
+            # Obtener el indice del reporte y llamar a la función
+            # especificada al crear esta ventana.
+            self.callback(
+                self.indice_reporte,
+                self.nombre_reporte
+            )
+            # Restablecer el atributo al cerrarse.
+            self.__class__.en_uso = False
+            # Cerrar la ventana.
+            self.destroy()
             # Restablecer el atributo al cerrarse.
             self.__class__.en_uso = False
             return super().destroy()

@@ -10,6 +10,7 @@ puede seleccionar un reporte, esto lo redireccionara a la ventana: Ver Reporte
 import tkinter as tk
 from tkinter import ttk, messagebox, font
 from PIL import Image, ImageTk
+import os # Para obtener la lista de reportes
 
 # Importa ventana Ver Reporte
 from ver_reporte import VerReporte
@@ -116,7 +117,7 @@ class Historial(tk.Toplevel):
 
         # Insertar elementos.
         for reporte in self.get_reportes():
-            self.reportes.insert(tk.END, reporte)
+            self.reportes.insert(tk.END, reporte.replace("_", ":"))
 
         self.contenedorLista.grid(row=2, column=0, sticky="nsew", pady=10, ipadx=80)
 
@@ -137,7 +138,10 @@ class Historial(tk.Toplevel):
         self.__class__.en_uso = True
 
     def get_reportes(self):
-        return ["13 nov - 11:54 a.m. (10 mins)", "10 nov - 11:45 a.m. (12 mins)", "1 de nov - 7:00 (22 mins)", "31 de oct - 2:34 p.m. (7 mins)"]
+        archivos = os.listdir("./reports/")
+        archivos = [nombre_archivo[:-4] for nombre_archivo in archivos if os.path.isfile("./reports/"+nombre_archivo)]
+        # print(archivos)
+        return archivos
 
     def goback(self):
         # Restablecer el atributo al cerrarse.
@@ -148,14 +152,20 @@ class Historial(tk.Toplevel):
         try:
             # Tupla de indices (posiciones) del elemento (reporte) seleccionado, en este caso solo obtiene uno
             indice = self.reportes.curselection()
-            reporte = self.reportes.get(indice)
+            reporte = self.reportes.get(indice).replace(":", "_")
 
             if not VerReporte.en_uso:
                 # Crear la ventana secundaria y pasar como argumento
                 # la función en la cual queremos recibir el dato
                 # ingresado.
-                print(reporte+".csv")
-                self.ventana_ver_reporte = VerReporte("reporte.csv")
+                # print(reporte+".csv")
+                self.ventana_ver_reporte = VerReporte(
+                    # Se envia el nombre con la extensión .csv
+                    # para poder acceder al archivo donde esta el reporte
+                    nombre_reporte=reporte+".csv",
+                    indice_reporte=indice,
+                    callback=self.eliminar_reporte
+                )
 
         except Exception as error:
             messagebox.showerror(
@@ -164,6 +174,17 @@ class Historial(tk.Toplevel):
                 parent=self
             )
             print(error)
+
+    def eliminar_reporte(self, indice_reporte, nombre_reporte):
+        # print(indice_reporte)
+        indice = self.reportes.get(indice_reporte)
+        # Borra el reporte de la lista
+        self.reportes.delete(indice[0])
+        # Borra el archivo con el reporte
+        if os.path.exists("./reports/" + nombre_reporte):
+            os.remove("./reports/" + nombre_reporte)
+        else:
+            print("No existe el archivo")
 
 if __name__ == "__main__":
     root = Historial()
