@@ -18,7 +18,8 @@ class Historial(tk.Toplevel):
 
     def __init__(self):
         super().__init__()
-        self.title("Inside Out")
+        self.title("Historial de reportes")
+        self.config(background="white")
 
         #  -------------- Estilos -------------- #
         self.style = ttk.Style()
@@ -42,7 +43,7 @@ class Historial(tk.Toplevel):
             borderwidth=1,
             padding=10
         )
-        self.style.map('B.TButton', background=[('active', '#1E88E5')], foreground=[('active', 'white')])
+        self.style.map('B.TButton', background=[('active', '#f0f0f0')], foreground=[('active', 'gray')])
 
         # Boton azul de confirmación: Abrir reporte
         self.style.configure(
@@ -64,11 +65,17 @@ class Historial(tk.Toplevel):
         self.contenedor = ttk.Frame(self, style="TFrame")
         self.contenedor.pack()
 
+        # Imagen para boton "Volver al inicio"
+        self.img_volver = tk.PhotoImage(file="./assets/homeicon.png")
+
         # -------------- Componentes -------------- #
+
         # Boton: Volver al inicio
         self.volver = ttk.Button(
             self.contenedor,
-            text="Volver al inicio",
+            image=self.img_volver,
+            compound=tk.LEFT,
+            text=" Volver al inicio",
             style="B.TButton",
             command=self.goback
         )
@@ -96,9 +103,9 @@ class Historial(tk.Toplevel):
         self.reportes.pack(fill=tk.X)
         self.contenedorLista.grid(row=2,column=0, sticky="nsew", padx=40, pady=10)
 
-        # Insertar 100 ítems.
-        for i in range(1, 101):
-            self.reportes.insert(tk.END, f"Elemento {i}")
+        # Insertar elementos.
+        for reporte in self.get_reportes():
+            self.reportes.insert(tk.END, reporte)
 
         # Boton: Abrir
         self.Abrir=ttk.Button(
@@ -116,6 +123,8 @@ class Historial(tk.Toplevel):
         # Indicar que la ventana está en uso luego de crearse.
         self.__class__.en_uso = True
 
+    def get_reportes(self):
+        return ["13 nov - 11:54 a.m. (10 mins)", "10 nov - 11:45 a.m. (12 mins)", "1 de nov - 7:00 (22 mins)", "31 de oct - 2:34 p.m. (7 mins)"]
 
     def goback(self):
         # Restablecer el atributo al cerrarse.

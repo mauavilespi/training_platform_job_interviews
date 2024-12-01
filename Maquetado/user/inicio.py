@@ -26,7 +26,7 @@ class Inicio(tk.Tk):
         # Ventana principal
         super().__init__()
         self.title("Inside Out")
-        self.config(bg="white")
+        self.config(background="white")
 
         # -------------- Estilos -------------- #
         self.style = ttk.Style()
@@ -64,7 +64,7 @@ class Inicio(tk.Tk):
             self,
             style="TFrame"
         )
-        self.contenedor.pack()
+        self.contenedor.pack(padx=50, pady=20)
 
         # Label: Bienvenidos
         self.label = ttk.Label(
@@ -127,7 +127,6 @@ class Inicio(tk.Tk):
         if not AprendeA.en_uso:
             self.ventana_aprende_CV = AprendeA()
 
-
     def abrir_aprende_a_Entrevista(self):
         if not AprendeA.en_uso:
             self.ventana_aprende_entrevista = AprendeA()
@@ -141,7 +140,6 @@ class Inicio(tk.Tk):
     def abrir_historial(self):
         if not Historial.en_uso:
             self.ventana_historial = Historial()
-
 
 if __name__ == "__main__":
     root = Inicio()

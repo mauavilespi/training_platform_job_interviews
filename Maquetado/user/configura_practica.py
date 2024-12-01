@@ -11,6 +11,7 @@ class ConfiguraPractica(tk.Toplevel):
         # Ventana
         super().__init__()
         self.title("Configura tu entrevista")
+        self.config(background="white")
 
         #  -------------- Estilos -------------- #
         self.style = ttk.Style()
@@ -36,7 +37,7 @@ class ConfiguraPractica(tk.Toplevel):
             focuscolor='none',
             padding=10
         )
-        self.style.map('CO.TButton', background=[('active', '#1E88E5')])
+        self.style.map('CO.TButton', background=[('active', '#1E88E5'), ('disabled', '#f0f0f0')], foreground=[('disabled', 'black')])
 
         # Boton de cancelar rojo
         self.style.configure(
@@ -66,15 +67,16 @@ class ConfiguraPractica(tk.Toplevel):
         # -------------- Componentes -------------- #
         # Frame contenedor (Pone fondo en blanco)
         self.contenedor = ttk.Frame(self, style="TFrame")
-        self.contenedor.pack()
+        self.contenedor.pack(padx=50, pady=50)
 
         # Combobox: Selecciona una categoria
         self.Categorias = ttk.Combobox(
             self.contenedor,
-            values=("Selecciona una categoria","Frontend", "Backend", "Softskills"),
+            values=self.get_list_categories(),
             font="Verdana 16 bold"
         )
         self.Categorias.current(0)
+        self.Categorias.bind("<<ComboboxSelected>>", self.categoria_seleccionada)
         self.Categorias.grid(row=0, column=0, sticky="nsew", columnspan=2, padx=20, pady=10)
 
         # Label: Numero de preguntas
@@ -90,8 +92,10 @@ class ConfiguraPractica(tk.Toplevel):
             self.contenedor,
             from_=1,
             to=30,
-            state="readonly",
-            font="Verdana 12"
+            wrap=True,
+            state="disabled",
+            font="Verdana 12",
+            command=self.calcular_tiempo
         )
         self.NumeroPreguntas.grid(row=2, column=1, sticky="e", padx=10, pady=10)
 
@@ -106,7 +110,7 @@ class ConfiguraPractica(tk.Toplevel):
         # Label: Duracion
         self.Duracion = ttk.Label(
             self.contenedor,
-            text="01:00",
+            text="00:00",
             style="BW.TLabel"
         )
         self.Duracion.grid(row=3, column=1, sticky="w", pady=10)
@@ -123,8 +127,9 @@ class ConfiguraPractica(tk.Toplevel):
         self.Confirmar=ttk.Button(
             self.contenedor,
             text="Confirmar",
-            command=self.prueba,
-            style="CO.TButton"
+            command=self.confirmar,
+            style="CO.TButton",
+            state="disabled"
         )
         self.Confirmar.grid(row=4, column=1, sticky="nsew", pady=10, padx=10)
 
@@ -135,8 +140,58 @@ class ConfiguraPractica(tk.Toplevel):
         # Indicar que la ventana está en uso luego de crearse.
         self.__class__.en_uso = True
 
-    def prueba(self):
-        print("Opcion presionada")
+    def confirmar(self):
+        # TODO: Iniciar entrevista
+        pass
+
+    # Función que calcula el tiempo que durara la entrevista
+    def calcular_tiempo(self):
+        # Trae el número de preguntas seleccionadas
+        total_preguntas = int(self.NumeroPreguntas.get())
+        # Despliega la duración estimada
+        self.Duracion.config(
+            text=f"{total_preguntas}:00"
+        )
+        # Permite confirmar una vez ya se haya seleccinado un numero de preguntas
+        self.Confirmar.config(
+            state="enabled"
+        )
+
+    # Funcion que se ejecuta cuando se selecciona una categoria
+    def categoria_seleccionada(self, event):
+        # Obtengo la categoria seleccionada
+        categoria = self.Categorias.get()
+        # Veo que no sea la primera opcion
+        if categoria == "Selecciona una categoría":
+            # Si es la primera opcion pongo todo en modo default
+            self.NumeroPreguntas.config(
+                state="disabled",
+                text=" "
+            )
+            self.Duracion.config(
+                text="00:00"
+            )
+            self.Confirmar.config(
+                state="disabled"
+            )
+        else:
+            # Configuro el Spinbox del numero de preguntas para solo tener como maximo el total de preguntas
+            # de una categoria
+            max_preguntas = self.get_total_preguntas_categoria(categoria)
+            self.NumeroPreguntas.config(
+                to=max_preguntas,
+                state="readonly"
+            )
+
+    def get_total_preguntas_categoria(self, categoria):
+        # TODO: Traer de la BD
+        total = len(categoria)
+        return total
+
+    def get_list_categories(self):
+        opcion_inicial = ["Selecciona una categoría"]
+        lista_categorias_de_bd = ["Frontend", "Backend", "Softskills"]
+        return tuple(opcion_inicial + lista_categorias_de_bd)
 
     def goback(self):
         # Restablecer el atributo al cerrarse.

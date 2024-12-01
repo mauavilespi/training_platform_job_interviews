@@ -19,6 +19,7 @@ class AprendeA(tk.Toplevel):
         # Ventana
         super().__init__()
         self.title("Aprende a...")
+        self.config(background="white")
 
         #  -------------- Estilos -------------- #
         self.style = ttk.Style()
@@ -33,10 +34,13 @@ class AprendeA(tk.Toplevel):
             borderwidth=1,
             padding=10
         )
-        self.style.map('GB.TButton', background=[('active', '#1E88E5')], foreground=[('active', 'white')])
+        self.style.map('GB.TButton', background=[('active', '#f0f0f0')], foreground=[('active', 'gray')])
 
         # Contenedor de fondo blanco
         self.style.configure("TFrame", background="white")
+
+        # Imagen para boton "Volver al inicio"
+        self.img_volver = tk.PhotoImage(file="./assets/homeicon.png")
 
         # -------------- Componentes -------------- #
         # Frame contenedor (Pone fondo en blanco)
@@ -44,12 +48,14 @@ class AprendeA(tk.Toplevel):
         self.fr.pack()
 
         # Boton: Volver al inicio
-        self.label = ttk.Button(
+        self.volver = ttk.Button(
             self.fr,
+            image=self.img_volver,
+            compound=tk.LEFT,
             text="Volver al inicio",
             style="GB.TButton",
             command=self.goback)
-        self.label.grid(row=0,column=1, sticky="w", padx=10, pady=10)
+        self.volver.grid(row=0,column=1, sticky="w", padx=10, pady=10)
 
         # Boton: a la izquierda
         self.imagenBTNIZQ = Image.open("./assets/BTNIZQ.png")
