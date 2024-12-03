@@ -54,8 +54,13 @@ while True:
     # Detectar caras en el cuadro
     faces = face_cascade.detectMultiScale(gray_frame, scaleFactor=1.1, minNeighbors=5, minSize=(50, 50))
 
-    for (x, y, w, h) in faces:
-        # Recortar la región de la cara
+    # Si se detectan caras, elegir la más grande (por área)
+    if len(faces) > 0:
+        # Calcular el área de cada rectángulo detectado
+        largest_face = max(faces, key=lambda rect: rect[2] * rect[3])  # rect = (x, y, w, h)
+        x, y, w, h = largest_face
+
+        # Recortar la región de la cara más grande
         face = frame[y:y+h, x:x+w]
 
         # Preprocesar la cara
@@ -68,11 +73,11 @@ while True:
             predicted_class = logits.argmax(-1).item()
             emotion = CLASSES[predicted_class]
 
-        # Dibujar un rectángulo alrededor de la cara y mostrar la emoción
+        # Dibujar un rectángulo alrededor de la cara más grande y mostrar la emoción
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
-    # Mostrar el cuadro con las emociones detectadas
+    # Mostrar el cuadro con la emoción detectada
     cv2.imshow("Detección de Emociones", frame)
 
     # Salir con 'q'
