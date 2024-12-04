@@ -92,14 +92,14 @@ subtitle_text = "Where are you from?"  # El texto que aparecerá abajo
 corner_text = "😬 Alegría"        # Texto con emoji en la esquina superior derecha
 
 # Inicializar variables de subtítulos y contador
-questions = ["How are you feeling today?", "What do you think about the future?", "Describe your favorite memory."]
+questions = ["¿Cómo te sientes el día de hoy?", "¿Cómo te ves en 10 años?", "¿Cuál ha sido tu mayor proyecto?"]
 emotion_durations = {emotion: 0 for emotion in CLASSES}
 current_question_idx = 0
 start_time = time.time()
 time_limit = 60  # Tiempo por pregunta en segundos
 
 # Inicializar la captura de video
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 if not cap.isOpened():
     print("Error: No se pudo abrir la cámara.")
