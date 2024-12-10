@@ -145,10 +145,10 @@ class VerReporte(tk.Toplevel):
         self.tablareporte.column("Triste", width=130, anchor=tk.CENTER)
         # Titulo de de columnas
         self.tablareporte.heading("#0", text="Pregunta")
-        self.tablareporte.heading("Disgusto", text="Disgusto", image=self.emo_disgusto)
         self.tablareporte.heading("Enojo", text="Enojo", image=self.emo_enojo)
-        self.tablareporte.heading("Feliz", text="Feliz", image=self.emo_feliz)
+        self.tablareporte.heading("Disgusto", text="Disgusto", image=self.emo_disgusto)
         self.tablareporte.heading("Miedo", text="Miedo", image=self.emo_miedo)
+        self.tablareporte.heading("Feliz", text="Feliz", image=self.emo_feliz)
         self.tablareporte.heading("Neutro", text="Neutro", image=self.emo_neutral)
         self.tablareporte.heading("Sorpresa", text="Sorpresa", image=self.emo_sorpresa)
         self.tablareporte.heading("Triste", text="Triste", image=self.emo_triste)
@@ -160,10 +160,10 @@ class VerReporte(tk.Toplevel):
                 tk.END,
                 text=pregunta['Preguntas'],
                 values=(
-                    pregunta['Disgusto'],
                     pregunta['Enojo'],
-                    pregunta['Feliz'],
+                    pregunta['Disgusto'],
                     pregunta['Miedo'],
+                    pregunta['Feliz'],
                     pregunta['Neutro'],
                     pregunta['Sorpresa'],
                     pregunta['Triste']
@@ -217,7 +217,7 @@ class VerReporte(tk.Toplevel):
 
     def get_reporte(self):
         # Se abre el reporte en modo lectura
-        with open(f"/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/reports/{self.nombre_reporte}", 'r', encoding='UTF-8') as csvfile:
+        with open(f"/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/reports/{self.nombre_reporte}", 'r', encoding='UTF-8') as csvfile:
             # Lee archivo tomando como delimitador las comas ','
             reader = csv.reader(csvfile, delimiter=',')
             # Se extraen encabezados

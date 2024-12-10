@@ -5,6 +5,9 @@ import torch
 from PIL import Image, ImageDraw, ImageFont
 from torchvision import transforms
 from transformers import ViTForImageClassification, ViTImageProcessor
+import os
+import csv
+from datetime import datetime
 
 # Configuración del dispositivo
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -94,9 +97,11 @@ corner_text = "😬 Alegría"        # Texto con emoji en la esquina superior de
 # Inicializar variables de subtítulos y contador
 questions = ["¿Cómo te sientes el día de hoy?", "¿Cómo te ves en 10 años?", "¿Cuál ha sido tu mayor proyecto?"]
 emotion_durations = {emotion: 0 for emotion in CLASSES}
+results = []
 current_question_idx = 0
 start_time = time.time()
 time_limit = 60  # Tiempo por pregunta en segundos
+total_time = 0
 
 # Inicializar la captura de video
 cap = cv2.VideoCapture(1)
@@ -159,11 +164,16 @@ while True:
 
     # Reiniciar o avanzar al siguiente subtítulo
     if remaining_time == 0 or cv2.waitKey(1) & 0xFF == ord('s'):
+        total_time += time_limit - remaining_time
         print(f"\nResultados para: {subtitle_text}")
         total_duration = sum(emotion_durations.values())
+        percentages = []
         for emotion, duration in emotion_durations.items():
             percentage = (duration / total_duration) * 100 if total_duration > 0 else 0
-            print(f"{emotion}: {percentage:.2f}%")
+            percentages.append(f"{percentage:.2f}%")
+        results.append([subtitle_text, f"{time_limit - remaining_time} seg", *percentages])
+        for emotion, percentage in zip(CLASSES, percentages):
+            print(f"{emotion}: {percentage}")
         emotion_durations = {emotion: 0 for emotion in CLASSES}
         current_question_idx += 1
         start_time = time.time()
@@ -178,6 +188,21 @@ while True:
     # Salir con 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+
+# Guardar resultados en un archivo CSV con nombres en español
+os.makedirs("reports", exist_ok=True)
+now = datetime.now()
+filename = now.strftime("%d de %b %I_%M %p") + f" ({total_time // 60} mins).csv"
+filepath = os.path.join("reports", filename)
+
+# Encabezados en español
+header = ["Preguntas", "Duración", "Enojo", "Disgusto", "Miedo", "Feliz", "Neutro", "Sorpresa", "Triste"]
+with open(filepath, mode="w", newline="", encoding="utf-8") as file:
+    writer = csv.writer(file)
+    writer.writerow(header)
+    writer.writerows(results)
+
+print(f"Archivo CSV generado: {filepath}")
 
 # Liberar recursos
 cap.release()

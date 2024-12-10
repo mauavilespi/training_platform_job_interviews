@@ -138,8 +138,8 @@ class Historial(tk.Toplevel):
         self.__class__.en_uso = True
 
     def get_reportes(self):
-        archivos = os.listdir("./reports/")
-        archivos = [nombre_archivo[:-4] for nombre_archivo in archivos if os.path.isfile("./reports/"+nombre_archivo)]
+        archivos = os.listdir("/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/reports/")
+        archivos = [nombre_archivo[:-4] for nombre_archivo in archivos if os.path.isfile("/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/reports/"+nombre_archivo)]
         # print(archivos)
         return archivos
 
@@ -181,8 +181,8 @@ class Historial(tk.Toplevel):
         # Borra el reporte de la lista
         self.reportes.delete(indice[0])
         # Borra el archivo con el reporte
-        if os.path.exists("./reports/" + nombre_reporte):
-            os.remove("./reports/" + nombre_reporte)
+        if os.path.exists("/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/reports/" + nombre_reporte):
+            os.remove("/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/reports/" + nombre_reporte)
         else:
             print("No existe el archivo")
 
