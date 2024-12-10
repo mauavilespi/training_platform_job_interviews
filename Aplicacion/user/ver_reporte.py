@@ -127,7 +127,7 @@ class VerReporte(tk.Toplevel):
         # Tabla de reporte (Treeview con varias columnas)
         self.tablareporte = ttk.Treeview(
             self.contenedor_tabla_reporte,
-            columns=("Disgusto", "Enojo", "Feliz", "Miedo", "Neutro", "Sorpresa", "Triste"),
+            columns=("Enojo", "Disgusto", "Miedo", "Feliz", "Neutro", "Sorpresa", "Triste"),
             yscrollcommand=self.scrollY.set
         )
         # Vincula barra vertical
@@ -136,10 +136,10 @@ class VerReporte(tk.Toplevel):
         )
         # Configurando columnas
         self.tablareporte.column("#0", width=400, anchor=tk.W)
-        self.tablareporte.column("Disgusto", width=170, anchor=tk.CENTER, stretch=tk.YES)
         self.tablareporte.column("Enojo", width=140, anchor=tk.CENTER)
-        self.tablareporte.column("Feliz", width=125, anchor=tk.CENTER)
+        self.tablareporte.column("Disgusto", width=170, anchor=tk.CENTER, stretch=tk.YES)
         self.tablareporte.column("Miedo", width=130, anchor=tk.CENTER)
+        self.tablareporte.column("Feliz", width=125, anchor=tk.CENTER)
         self.tablareporte.column("Neutro", width=145, anchor=tk.CENTER)
         self.tablareporte.column("Sorpresa", width=160, anchor=tk.CENTER)
         self.tablareporte.column("Triste", width=130, anchor=tk.CENTER)
