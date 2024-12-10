@@ -93,13 +93,13 @@ class VerReporte(tk.Toplevel):
         )
 
         # Obtener imagenes para las emociones
-        self.emo_disgusto = tk.PhotoImage(file="./assets/emociones/disgusto-s.png")
-        self.emo_enojo = tk.PhotoImage(file="./assets/emociones/enojo-s.png")
-        self.emo_feliz = tk.PhotoImage(file="./assets/emociones/feliz-s.png")
-        self.emo_miedo = tk.PhotoImage(file="./assets/emociones/miedo-s.png")
-        self.emo_neutral = tk.PhotoImage(file="./assets/emociones/neutral-s.png")
-        self.emo_sorpresa = tk.PhotoImage(file="./assets/emociones/sorpresa-s.png")
-        self.emo_triste = tk.PhotoImage(file="./assets/emociones/triste-s.png")
+        self.emo_disgusto = tk.PhotoImage(file="/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/emociones/disgusto-s.png")
+        self.emo_enojo = tk.PhotoImage(file="/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/emociones/enojo-s.png")
+        self.emo_feliz = tk.PhotoImage(file="/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/emociones/feliz-s.png")
+        self.emo_miedo = tk.PhotoImage(file="/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/emociones/miedo-s.png")
+        self.emo_neutral = tk.PhotoImage(file="/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/emociones/neutral-s.png")
+        self.emo_sorpresa = tk.PhotoImage(file="/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/emociones/sorpresa-s.png")
+        self.emo_triste = tk.PhotoImage(file="/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/emociones/triste-s.png")
 
         # -------------- Componentes -------------- #
         # Frame contenedor (Pone fondo en blanco)
@@ -217,7 +217,7 @@ class VerReporte(tk.Toplevel):
 
     def get_reporte(self):
         # Se abre el reporte en modo lectura
-        with open(f"./reports/{self.nombre_reporte}", 'r', encoding='UTF-8') as csvfile:
+        with open(f"/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/reports/{self.nombre_reporte}", 'r', encoding='UTF-8') as csvfile:
             # Lee archivo tomando como delimitador las comas ','
             reader = csv.reader(csvfile, delimiter=',')
             # Se extraen encabezados

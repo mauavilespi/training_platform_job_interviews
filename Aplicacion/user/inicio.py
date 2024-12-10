@@ -113,7 +113,7 @@ class Inicio(tk.Tk):
 
 
         # Label: Imagen de abajo
-        self.imagen = Image.open("./assets/happy.png")
+        self.imagen = Image.open("/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/happy.png")
         self.HappyFace = ImageTk.PhotoImage(self.imagen)
         self.labelIMG = tk.Label(
             self.contenedor,

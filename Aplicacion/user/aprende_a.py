@@ -40,7 +40,7 @@ class AprendeA(tk.Toplevel):
         self.style.configure("TFrame", background="white")
 
         # Imagen para boton "Volver al inicio"
-        self.img_volver = tk.PhotoImage(file="./assets/homeicon.png")
+        self.img_volver = tk.PhotoImage(file="/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/homeicon.png")
 
         # -------------- Componentes -------------- #
         # Frame contenedor (Pone fondo en blanco)
@@ -58,19 +58,19 @@ class AprendeA(tk.Toplevel):
         self.volver.grid(row=0,column=1, sticky="w", padx=10, pady=10)
 
         # Boton: a la izquierda
-        self.imagenBTNIZQ = Image.open("./assets/BTNIZQ.png")
+        self.imagenBTNIZQ = Image.open("/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/BTNIZQ.png")
         self.ObjImgBtnIzq = ImageTk.PhotoImage(self.imagenBTNIZQ)
         self.BtnIzq = tk.Button(self.fr, image=self.ObjImgBtnIzq, borderwidth=0, bg="white", command=self.prueba)
         self.BtnIzq.grid(row=2,column=0, sticky="w", padx=10, pady=10)
 
         # Label: contenedor de imagen
-        self.imagenContenedor= Image.open("./assets/Contenedor.png")
+        self.imagenContenedor= Image.open("/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/Contenedor.png")
         self.ObjImgContenedor = ImageTk.PhotoImage(self.imagenContenedor)
         self.Contenedor = tk.Label(self.fr, image=self.ObjImgContenedor)
         self.Contenedor.grid(row=1,column=1, sticky="nsew", rowspan=3, padx=10, pady=10)
 
         # Boton a la derecha
-        self.imagenBTNDER = Image.open("./assets/BTNDER.png")
+        self.imagenBTNDER = Image.open("/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/BTNDER.png")
         self.ObjImgBtnDer = ImageTk.PhotoImage(self.imagenBTNDER)
         self.BtnDer = tk.Button(self.fr, image=self.ObjImgBtnDer, borderwidth=0, bg="white", command=self.prueba)
         self.BtnDer.grid(row=2,column=2, sticky="w", padx=10, pady=10)

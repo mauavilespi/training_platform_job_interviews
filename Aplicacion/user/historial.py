@@ -66,7 +66,7 @@ class Historial(tk.Toplevel):
         self.style.configure("TFrame", background="white")
 
         # Imagen para boton "Volver al inicio"
-        self.img_volver = tk.PhotoImage(file="./assets/homeicon.png")
+        self.img_volver = tk.PhotoImage(file="/Users/mauavilespi/Documents/TTR/training_platform_job_interviews/Aplicacion/user/assets/homeicon.png")
 
         # -------------- Componentes -------------- #
         # Frame contenedor (Pone fondo en blanco)

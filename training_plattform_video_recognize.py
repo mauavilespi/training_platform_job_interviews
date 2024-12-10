@@ -99,7 +99,7 @@ start_time = time.time()
 time_limit = 60  # Tiempo por pregunta en segundos
 
 # Inicializar la captura de video
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 if not cap.isOpened():
     print("Error: No se pudo abrir la cámara.")
