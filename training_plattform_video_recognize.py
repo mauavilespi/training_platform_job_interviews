@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import time
 import torch
+import random
 from PIL import Image, ImageDraw, ImageFont
 from torchvision import transforms
 from transformers import ViTForImageClassification, ViTImageProcessor
@@ -95,7 +96,59 @@ subtitle_text = "Where are you from?"  # El texto que aparecerá abajo
 corner_text = "😬 Alegría"        # Texto con emoji en la esquina superior derecha
 
 # Inicializar variables de subtítulos y contador
-questions = ["¿Cómo te sientes el día de hoy?", "¿Cómo te ves en 10 años?", "¿Cuál ha sido tu mayor proyecto?"]
+preguntas_ti = [
+    "¿Puedes contarnos sobre ti y tu experiencia profesional?",
+    "¿Por qué elegiste una carrera en TI?",
+    "¿Qué te motivó a postularte para este puesto?",
+    "¿Cuáles son tus principales fortalezas como profesional de TI?",
+    "¿Qué consideras que es tu mayor debilidad y cómo trabajas para mejorarla?",
+    "¿Dónde te ves en cinco años profesionalmente?",
+    "¿Cómo manejas los plazos ajustados o múltiples proyectos al mismo tiempo?",
+    "¿Qué opinas de trabajar en equipo versus trabajar solo?",
+    "Describe un problema complejo que hayas resuelto en el pasado y cómo lo hiciste.",
+    "¿Cómo te mantienes actualizado con las últimas tendencias y tecnologías?",
+    "¿Qué lenguajes de programación dominas? ¿Cuál es tu favorito y por qué?",
+    "¿Puedes explicar el concepto de programación orientada a objetos (POO)?",
+    "¿Qué diferencias hay entre bases de datos relacionales y no relacionales?",
+    "¿Qué es una API y cómo la has utilizado en tus proyectos?",
+    "¿Puedes explicar qué es un algoritmo y por qué es importante en programación?",
+    "¿Cómo manejas el control de versiones en tus proyectos? ¿Has trabajado con Git?",
+    "¿Qué entiendes por DevOps y cómo contribuye al desarrollo de software?",
+    "Describe tu experiencia trabajando con sistemas operativos como Linux o Windows.",
+    "¿Qué metodología de desarrollo utilizas (ágil, scrum, cascada) y por qué?",
+    "¿Cómo abordarías un problema de rendimiento en una aplicación?",
+    "¿Qué tipo de proyectos has desarrollado en el pasado?",
+    "¿Has liderado equipos o tomado decisiones clave en algún proyecto?",
+    "¿Qué haces cuando un proyecto no cumple con las expectativas del cliente?",
+    "¿Qué herramientas usas para organizarte en el trabajo?",
+    "Describe un proyecto exitoso en el que hayas trabajado y tu rol en él.",
+    "¿Alguna vez trabajaste con clientes difíciles? ¿Cómo manejaste la situación?",
+    "¿Qué tecnologías específicas utilizaste en tu trabajo anterior y cómo?",
+    "¿Tienes experiencia con desarrollo front-end, back-end o full-stack?",
+    "¿Cómo pruebas y depuras tu código antes de implementarlo?",
+    "¿Has trabajado en proyectos colaborativos de código abierto o freelancing?",
+    "¿Qué sabes sobre seguridad informática? ¿Cómo protegerías una aplicación web?",
+    "¿Cómo diseñarías una arquitectura para una aplicación escalable?",
+    "¿Qué entiendes por normalización en bases de datos?",
+    "¿Qué es el modelo MVC y cuándo lo has implementado?",
+    "¿Cómo manejarías una gran cantidad de datos en tiempo real?",
+    "¿Qué diferencias hay entre protocolos como HTTP y HTTPS?",
+    "¿Has trabajado con tecnologías en la nube como AWS, Azure o Google Cloud?",
+    "¿Puedes explicar qué es un contenedor y cómo funciona Docker?",
+    "¿Qué estrategias usas para optimizar consultas SQL?",
+    "¿Tienes experiencia con sistemas de control de acceso o autenticación?",
+    "¿Qué harías si descubres un error en producción?",
+    "¿Cómo priorizarías una lista de tareas críticas?",
+    "Si tu jefe te pide cambiar algo que sabes que no es correcto, ¿cómo actuarías?",
+    "¿Cómo manejarías un conflicto con un compañero de equipo?",
+    "Si te pidieran aprender una nueva tecnología en poco tiempo, ¿cómo lo harías?",
+    "¿Qué harías si no estás seguro de cómo resolver un problema técnico?",
+    "Describe cómo gestionarías un proyecto que está atrasado.",
+    "¿Qué harías si te enfrentas a una tecnología o problema que no conoces?",
+    "¿Cómo garantizarías que el cliente reciba un producto de alta calidad?",
+    "¿Qué harías si el equipo no está de acuerdo con tu enfoque técnico?"
+]
+questions = random.sample(preguntas_ti, 5)
 emotion_durations = {emotion: 0 for emotion in CLASSES}
 results = []
 current_question_idx = 0
@@ -155,7 +208,7 @@ while True:
 
     # Mostrar subtítulo y contador
     subtitle_text = questions[current_question_idx]
-    frame = draw_text_box(frame, subtitle_text, position=(50, height - 120), font_size=40)
+    frame = draw_text_box(frame, subtitle_text, position=(50, height - 120), font_size=24)
     timer_text = f"{remaining_time // 60:02}:{remaining_time % 60:02}"
     frame = draw_text_box(frame, timer_text, position=(50, 20), font_size=24)
 
